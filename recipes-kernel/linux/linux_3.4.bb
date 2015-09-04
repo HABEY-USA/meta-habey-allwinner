@@ -2,17 +2,18 @@ require linux.inc
 
 DESCRIPTION = "Linux kernel for Allwinner a10/a20 processors"
 
-COMPATIBLE_MACHINE = "(mele|meleg|olinuxino-a13|olinuxino-a10s|olinuxino-a10|olinuxino-a20|olinuxino-a20som|olinuxino-a20lime|cubieboard|cubieboard2|cubietruck)"
+COMPATIBLE_MACHINE = "(ad203)"
 
 PV = "3.4.90"
 PR = "r1"
 # Last tested version by myself
-SRCREV_pn-${PN} = "e37d760b363888f3a65cd6455c99a75cac70a7b8"
+#SRCREV_pn-${PN} = "e37d760b363888f3a65cd6455c99a75cac70a7b8"
+SRCREV = "${AUTOREV}"
+SCMVERSION = "n"
 
 MACHINE_KERNEL_PR_append = "a"
 
-SRC_URI += "git://github.com/linux-sunxi/linux-sunxi.git;branch=sunxi-3.4;protocol=git \
-        http://archlinuxarm.org/builder/src/0001-cgroup-add-xattr-support-sunxi.patch;name=cgroup-patch \
+SRC_URI += "git://github.com/HABEY-USA/linux-sunxi.git;branch=sunxi-3.4 \
         file://defconfig \
         "
 
