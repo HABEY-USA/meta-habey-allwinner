@@ -18,12 +18,14 @@ DEFAULT_PREFERENCE_cubieboard="1"
 DEFAULT_PREFERENCE_cubieboard2="1"
 DEFAULT_PREFERENCE_cubietruck="1"
 
-SRC_URI = "git://github.com/linux-sunxi/u-boot-sunxi.git;protocol=git;branch=sunxi"
+SRC_URI = "git://github.com/HABEY-USA/u-boot-sunxi.git;branch=sunxi"
+
 
 PE = "1"
 PV = "v2014.04+git${SRCPV}"
-SRCREV = "ee425f94b488a4304c136a171bb8fdec0d835032"
-
+#SRCREV = "ee425f94b488a4304c136a171bb8fdec0d835032"
+SRCREV = "${AUTOREV}"
+SCMVERSION = "n"
 
 S = "${WORKDIR}/git"
 
