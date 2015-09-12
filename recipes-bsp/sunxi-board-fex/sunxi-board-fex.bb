@@ -47,4 +47,4 @@ do_package_write_rpm[noexec] = "1"
 do_package_write_deb[noexec] = "1"
 do_populate_sysroot[noexec] = "1"
 
-COMPATIBLE_MACHINE = "(ad203)"
+COMPATIBLE_MACHINE = "(ad203-sd | ad203-emmc)"

@@ -2,7 +2,7 @@ require linux.inc
 
 DESCRIPTION = "Linux kernel for Allwinner a10/a20 processors"
 
-COMPATIBLE_MACHINE = "(ad203)"
+COMPATIBLE_MACHINE = "(ad203-sd | ad203-emmc)"
 
 PV = "3.4.90"
 PR = "r1"
