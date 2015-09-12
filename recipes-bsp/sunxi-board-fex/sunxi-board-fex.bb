@@ -14,7 +14,8 @@ SRCREV = "${AUTOREV}"
 SCMVERSION = "n"
 
 S = "${WORKDIR}/git"
-SUNXI_FEX_FILE_ad203 = "sys_config/a20/ad203.fex"
+SUNXI_FEX_FILE_ad203-sd = "sys_config/a20/ad203-sd.fex"
+SUNXI_FEX_FILE_ad203-emmc = "sys_config/a20/ad203-emmc.fex"
 
 SUNXI_FEX_BIN_IMAGE = "fex-${MACHINE}-${PV}-${PR}.bin"
 SUNXI_FEX_BIN_IMAGE_SYMLINK = "fex-${MACHINE}.bin"
