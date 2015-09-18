@@ -58,27 +58,38 @@ IMAGE_CMD_sunxi-sdimg () {
 	# Create partition table
 	parted -s ${SDIMG} mklabel msdos
 	# Create boot partition and mark it as bootable
-	parted -s ${SDIMG} unit KiB mkpart primary fat32 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
+	parted -s ${SDIMG} unit KiB mkpart primary ext2 ${IMAGE_ROOTFS_ALIGNMENT} $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT})
 	parted -s ${SDIMG} set 1 boot on
 	# Create rootfs partition
 	parted -s ${SDIMG} unit KiB mkpart primary ext2 $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT}) $(expr ${BOOT_SPACE_ALIGNED} \+ ${IMAGE_ROOTFS_ALIGNMENT} \+ ${ROOTFS_SIZE})
 	parted ${SDIMG} print
 
-	# Create a vfat image with boot files
+	# Create a ext2 image with boot files
 	BOOT_BLOCKS=$(LC_ALL=C parted -s ${SDIMG} unit b print | awk '/ 1 / { print substr($4, 1, length($4 -1)) / 512 /2 }')
-	mkfs.vfat -n "${BOOTDD_VOLUME_ID}" -S 512 -C ${WORKDIR}/boot.img $BOOT_BLOCKS
-	mcopy -i ${WORKDIR}/boot.img -s ${STAGING_DIR_HOST}/usr/src/kernel/${KERNEL_IMAGETYPE} ::uImage
+	echo "test"
+	echo $BOOT_BLOCKS
+	#dd if=/dev/zero bs=1k count=$BOOT_BLOCKS of=${WORKDIR}/boot.img
+	#mkfs.ext2 -L "${BOOTDD_VOLUME_ID}" -F ${WORKDIR}/boot.img
+	#mcopy -i ${WORKDIR}/boot.img -s ${STAGING_DIR_HOST}/usr/src/kernel/${KERNEL_IMAGETYPE} ::uImage
+	rm -rf mnt
+	mkdir mnt
+	cp ${STAGING_DIR_HOST}/usr/src/kernel/${KERNEL_IMAGETYPE}  mnt/uImage
+	
+
 	if [ -e "${DEPLOY_DIR_IMAGE}/fex.bin" ]
 	then
-		mcopy -i ${WORKDIR}/boot.img -s ${DEPLOY_DIR_IMAGE}/fex.bin ::script.bin
+		cp ${DEPLOY_DIR_IMAGE}/fex.bin mnt/script.bin
 	fi
 
 	# Add stamp file
 	echo "${IMAGE_NAME}-${IMAGEDATESTAMP}" > ${WORKDIR}/image-version-info
-	mcopy -i ${WORKDIR}/boot.img -v ${WORKDIR}//image-version-info ::
+	cp ${WORKDIR}//image-version-info mnt/
+
+        #ext2
+        genext2fs -b $BOOT_BLOCKS -d ./mnt ${WORKDIR}/boot.ext2
 
 	# Burn Partitions
-	dd if=${WORKDIR}/boot.img of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
+	dd if=${WORKDIR}/boot.ext2 of=${SDIMG} conv=notrunc seek=1 bs=$(expr ${IMAGE_ROOTFS_ALIGNMENT} \* 1024) && sync && sync
 	# If SDIMG_ROOTFS_TYPE is a .xz file use xzcat
 	if echo "${SDIMG_ROOTFS_TYPE}" | egrep -q "*\.xz"
 	then
